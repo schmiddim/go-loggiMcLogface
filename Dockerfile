@@ -18,5 +18,6 @@ WORKDIR /app
 # Copy the compiled Go program from the builder stage
 COPY --from=builder /bin/action /app/action
 
+COPY --from=builder /src/example.yaml /example.yaml
 # Set entrypoint
 ENTRYPOINT ["/app/action", "run"]
