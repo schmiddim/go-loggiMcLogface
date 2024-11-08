@@ -6,6 +6,7 @@ import (
 	"go-loggi/helper"
 	"gopkg.in/yaml.v3"
 	"math/rand"
+	"net/http"
 	"os"
 	"time"
 )
@@ -48,6 +49,15 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		helper.LoggerInit()
+		// just a liveness & readiness probe
+		go func() {
+			http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {})
+			err := http.ListenAndServe(":9090", nil)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}()
+
 		var c config
 		c.getConf(filename)
 
@@ -56,7 +66,6 @@ to quickly create a Cobra application.`,
 		for range time.Tick(time.Second * time.Duration(c.Interval)) {
 			go func() {
 				log.Info(c.GetRandomString())
-
 			}()
 		}
 	},
