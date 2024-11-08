@@ -1,0 +1,7 @@
+interval: 5
+strings:
+  - password
+  - secret
+  - compliance
+  - foo
+  - bar
